@@ -14,12 +14,15 @@
   "author": "Waag Society",
   "license": "GPL-3.0",
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "async": "^0.9.0",
     "colors": "^1.1.0",
     "csv": "^0.4.2",
     "event-stream": "^3.3.1",
     "geojsonhint": "^1.0.0",
     "highland": "^2.5.1",
+    "histograph-config": "histograph/config",
+    "histograph-schemas": "histograph/schemas",
     "is-my-json-valid": "^2.10.1",
     "level": "^0.19.1",
     "minimist": "^1.1.1",
@@ -33,9 +36,7 @@
     "sparql-client": "^0.2.0",
     "urlify": "^0.3.6",
     "xml2js": "^0.4.8",
-    "zipfile": "^0.5.7",
-    "histograph-config": "histograph/config",
-    "histograph-schemas": "histograph/schemas"
+    "zipfile": "^0.5.7"
   },
   "jshintConfig": {
     "node": true,
