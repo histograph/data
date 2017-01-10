@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var schemas = require('histograph-schemas');
-var geojsonhint = require('geojsonhint');
+var geojsonhint = require('@mapbox/geojsonhint');
 var validator = require('is-my-json-valid');
 
 var validators = {
