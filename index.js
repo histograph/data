@@ -18,11 +18,11 @@ if (argv._.length > 0) {
   datasets = argv._;
 }
 
-async.eachSeries(datasets, function(dataset, callback) {
+async.eachSeries(datasets, function(dataset, outerCallback) {
   var importer = require('./' + path.join(dataset, dataset));
 
   console.log('Processing dataset ' + dataset.inverse + ':');
-  async.eachSeries(steps, function(step, callback) {
+  async.eachSeries(steps, function(step, innerCallback) {
     if (!argv.steps || (argv.steps && argv.steps.split(',').indexOf(step) > -1) || step === 'done') {
       if (importer[step]) {
         console.log('  Executing step ' + step.underline + '...');
@@ -34,17 +34,17 @@ async.eachSeries(datasets, function(dataset, callback) {
             console.log('    Done!'.green);
           }
 
-          callback(err);
+          innerCallback(err);
         });
       } else {
-        callback();
+        innerCallback();
       }
     } else {
       if (importer[step]) {
         console.log(('  Skipping step ' + step.underline + '...').gray);
       }
 
-      callback();
+      innerCallback();
     }
   },
 
@@ -53,7 +53,7 @@ async.eachSeries(datasets, function(dataset, callback) {
       console.log('Error: '.red + err);
     }
 
-    callback();
+    outerCallback();
   });
 },
 
