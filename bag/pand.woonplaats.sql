@@ -5,7 +5,7 @@ SELECT * FROM (
     ST_AsGeoJSON(ST_Transform(ST_Force_2d(p.geovlak), 4326)) AS geometry,
     array_to_string(ARRAY(
       SELECT DISTINCT opr.identificatie::bigint FROM
-        verblijfsobjectpandactueel vbop
+        bagactueel.verblijfsobjectpand vbop
       JOIN
         bagactueel.verblijfsobject vbo
       ON

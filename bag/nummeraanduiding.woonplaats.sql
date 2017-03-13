@@ -18,7 +18,7 @@ SELECT DISTINCT ON (na.identificatie)
 FROM
   bagactueel.verblijfsobject vbo
 JOIN
-  verblijfsobjectgebruiksdoelactueel gd
+  bagactueel.verblijfsobjectgebruiksdoel gd
 ON
   gd.identificatie = vbo.identificatie
 JOIN
