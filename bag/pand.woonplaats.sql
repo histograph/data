@@ -2,7 +2,7 @@ SELECT * FROM (
   SELECT
     p.identificatie AS id,
     bouwjaar,
-    ST_AsGeoJSON(ST_Transform(ST_Force_2d(p.geovlak), 4326)) AS geometry,
+    ST_AsGeoJSON(ST_Transform(ST_Force2D(p.geovlak), 4326)) AS geometry,
     array_to_string(ARRAY(
       SELECT DISTINCT opr.identificatie::bigint FROM
         bagactueel.verblijfsobjectpand vbop
@@ -15,7 +15,7 @@ SELECT * FROM (
       ON
         na.identificatie = vbo.hoofdadres
       JOIN
-        openbareruimte opr
+        bagactueel.openbareruimte opr
       ON
         na.gerelateerdeopenbareruimte = opr.identificatie
       WHERE
@@ -23,7 +23,7 @@ SELECT * FROM (
      ), ',') AS openbareruimtes
   FROM bagactueel.pand p
   JOIN
-    verblijfsobjectpand vbop
+    bagactueel.verblijfsobjectpand vbop
   ON
     vbop.gerelateerdpand = p.identificatie
   JOIN
@@ -35,7 +35,7 @@ SELECT * FROM (
   ON
     na.identificatie = vbo.hoofdadres
   JOIN
-    openbareruimte opr
+    bagactueel.openbareruimte opr
   ON
     na.gerelateerdeopenbareruimte = opr.identificatie
   WHERE

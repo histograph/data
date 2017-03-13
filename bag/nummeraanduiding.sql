@@ -14,7 +14,7 @@ SELECT
   huisnummertoevoeging,
   postcode,
   opr.identificatie AS openbareruimte,
-  ST_AsGeoJSON(ST_Transform(ST_Force_2d(geopunt), 4326)) AS geometry
+  ST_AsGeoJSON(ST_Transform(ST_Force2D(geopunt), 4326)) AS geometry
 FROM
   bagactueel.nummeraanduiding na
 JOIN
@@ -22,6 +22,6 @@ JOIN
 ON
   na.identificatie = vbo.hoofdadres
 JOIN
-  openbareruimte opr
+  bagactueel.openbareruimte opr
 ON
   na.gerelateerdeopenbareruimte = opr.identificatie

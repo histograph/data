@@ -4,7 +4,7 @@ SELECT
   gerelateerdewoonplaats::int AS woonplaatscode,
   wp.woonplaatsnaam::text
 FROM
-  openbareruimte opr
+  bagactueel.openbareruimte opr
 JOIN
   bagactueel.woonplaats wp ON opr.gerelateerdewoonplaats = wp.identificatie
 WHERE
