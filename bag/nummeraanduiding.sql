@@ -3,8 +3,8 @@ SELECT
   (
     SELECT
     array_to_string(array_agg(p.identificatie::bigint), ',') AS pand_ids
-    FROM pandactueelbestaand p
-    JOIN verblijfsobjectpandactueel vbop
+    FROM bagactueel.pand p
+    JOIN bagactueel.verblijfsobjectpand vbop
     ON p.identificatie = vbop.gerelateerdpand
     WHERE vbop.identificatie = vbo.identificatie
   ),
@@ -16,9 +16,9 @@ SELECT
   opr.identificatie AS openbareruimte,
   ST_AsGeoJSON(ST_Transform(ST_Force_2d(geopunt), 4326)) AS geometry
 FROM
-  nummeraanduidingactueelbestaand na
+  bagactueel.nummeraanduiding na
 JOIN
-  verblijfsobjectactueelbestaand vbo
+  bagactueel.verblijfsobject vbo
 ON
   na.identificatie = vbo.hoofdadres
 JOIN

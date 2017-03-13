@@ -4,8 +4,8 @@ SELECT
   gemeentecode::int,
   ST_AsGeoJSON(ST_Transform(ST_Force_2d(geovlak), 4326)) AS geometry
 FROM
-  woonplaatsactueelbestaand wp
+  bagactueel.woonplaats wp
 JOIN
-  gemeente_woonplaatsactueelbestaand gwp
+  bagactueel.gemeente_woonplaats gwp
 ON
   wp.identificatie = gwp.woonplaatscode

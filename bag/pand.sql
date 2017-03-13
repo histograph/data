@@ -7,11 +7,11 @@ SELECT * FROM (
       SELECT DISTINCT opr.identificatie::bigint FROM
         verblijfsobjectpandactueel vbop
       JOIN
-        verblijfsobjectactueelbestaand vbo
+        bagactueel.verblijfsobject vbo
       ON
         vbo.identificatie = vbop.identificatie
       JOIN
-        nummeraanduidingactueelbestaand na
+        bagactueel.nummeraanduiding na
       ON
         na.identificatie = vbo.hoofdadres
       JOIN
@@ -21,6 +21,6 @@ SELECT * FROM (
       WHERE
        vbop.gerelateerdpand = p.identificatie
      ), ',') AS openbareruimtes
-  FROM pandactueelbestaand p
+  FROM bagactueel.pand p
 ) AS panden
 WHERE openbareruimtes != ''

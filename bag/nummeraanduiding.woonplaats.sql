@@ -3,8 +3,8 @@ SELECT DISTINCT ON (na.identificatie)
   (
   	SELECT
   	array_to_string(array_agg(p.identificatie::bigint), ',') AS pand_ids
-  	FROM pandactueelbestaand p
-  	JOIN verblijfsobjectpandactueel vbop
+  	FROM bagactueel.pand p
+  	JOIN bagactueel.verblijfsobjectpand vbop
   	ON p.identificatie = vbop.gerelateerdpand
   	WHERE vbop.identificatie = vbo.identificatie
   ),
@@ -16,13 +16,13 @@ SELECT DISTINCT ON (na.identificatie)
   opr.identificatie AS openbareruimte,
   ST_AsGeoJSON(ST_Transform(ST_Force_2d(geopunt), 4326)) AS geometry
 FROM
-  verblijfsobjectactueelbestaand vbo
+  bagactueel.verblijfsobject vbo
 JOIN
   verblijfsobjectgebruiksdoelactueel gd
 ON
   gd.identificatie = vbo.identificatie
 JOIN
-  nummeraanduidingactueelbestaand na
+  bagactueel.nummeraanduiding na
 ON
   na.identificatie = vbo.hoofdadres
 JOIN
