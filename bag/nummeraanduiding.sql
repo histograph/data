@@ -22,6 +22,6 @@ JOIN
 ON
   na.identificatie = vbo.hoofdadres
 JOIN
-  openbareruimteactueelbestaand opr
+  openbareruimte opr
 ON
   na.gerelateerdeopenbareruimte = opr.identificatie
