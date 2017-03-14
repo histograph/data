@@ -124,6 +124,8 @@ exports.convert = function(config, callback) {
     truncate: true
   });
 
+  endEmitted = false;
+
   db.createReadStream()
     .pipe(es.map(function(data, callback) {
       var wvkIds = Object.keys(data.value);
@@ -188,9 +190,12 @@ exports.convert = function(config, callback) {
       callback(err);
     })
     .on('close', function() {
-      callback();
+      if ( ! endEmitted ) {
+          callback();
+      }
     })
     .on('end', function() {
+      endEmitted = true;
       callback();
     });
 };
