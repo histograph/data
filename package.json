@@ -36,7 +36,8 @@
     "xml2js": "^0.4.17",
     "zipfile": "^0.5.11",
     "histograph-config": "git+https://github.com/histograph/config#puppetdeploy",
-    "histograph-schemas": "git+https://github.com/histograph/schemas#puppetdeploy"
+    "histograph-schemas": "git+https://github.com/histograph/schemas#puppetdeploy",
+    "histograph-logging": "git+https://github.com/histograph/logging#puppetdeploy"
   },
   "repository": {
     "type": "git",

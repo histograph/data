@@ -1,10 +1,10 @@
-var path = require('path');
-var async = require('async');
-var config = require('histograph-config');
-var parseArgs = require('minimist');
+const path = require('path');
+const async = require('async');
+const config = require('histograph-config');
+const parseArgs = require('minimist');
 require('colors');
 
-var steps = [
+const steps = [
   'download',
   'convert',
   'done'
