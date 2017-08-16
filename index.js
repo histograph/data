@@ -29,13 +29,13 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
   async.eachSeries(steps, function(step, innerCallback) {
     if (!argv.steps || (argv.steps && argv.steps.split(',').indexOf(step) > -1) || step === 'done') {
       if (importer[step]) {
-        my_log.info('  Executing step ' + step.underline + '...');
+        my_log.info('Executing step ' + step.underline + '...');
 
         importer[step](config.data[dataset], function(err) {
           if (err) {
-            my_log.error('    Error: '.red + JSON.stringify(err));
+            my_log.error('Error from importer: '.red + JSON.stringify(err));
           } else {
-            my_log.info('    Done!'.green);
+            my_log.info('Done!'.green);
           }
 
           innerCallback(err);
@@ -45,7 +45,7 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
       }
     } else {
       if (importer[step]) {
-        my_log.info(('  Skipping step ' + step.underline + '...').gray);
+        my_log.info(('Skipping step ' + step.underline + '...').gray);
       }
 
       innerCallback();
@@ -54,7 +54,7 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
 
   function(err) {
     if (err) {
-      my_info.error('Error: '.red + err);
+      my_log.error('Error: '.red + err);
     }
 
     outerCallback();
@@ -62,5 +62,5 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
 },
 
 function() {
-  my_log.info('\nAll datasets done!'.green.underline);
+  my_log.info('All datasets done!'.green.underline);
 });

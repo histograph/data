@@ -11,7 +11,7 @@ const log = require('histograph-logging');
 const my_log = new log("data");
 
 
-const pitsAndRelations;
+var pitsAndRelations;
 
 const woonplaats = null;
 
@@ -50,11 +50,17 @@ function runAllQueries(client, callback) {
     }
 
     runQuery(client, sql, query.name, query.rowToPitsAndRelations, function(err) {
+      if(err){
+        my_log.error("Error from run query: " + err);
+      }
       callback(err);
     });
   },
 
   function(err) {
+    if(err){
+      my_log.error("Error processing queries: " + err);
+    }
     callback(err);
   });
 }
@@ -73,6 +79,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
     cursor.read(cursorSize, function(err, rows) {
       if (err) {
+        my_log.error("Error in reading cursor: " + err);
         callback(err);
       } else {
         if (!rows.length) {
@@ -85,11 +92,17 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
             async.eachSeries(emit, function(item, callback) {
               pitsAndRelations.emit(item.type, item.obj, function(err) {
+                if(err){
+                  my_log.error("pitsAndRelations.emit error: " + err);
+                }
                 callback(err);
               });
             },
 
             function(err) {
+              if(err){
+                my_log.error("Error processing rows: " + err);
+              }
               callback(err);
             });
           },
@@ -99,7 +112,10 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
             // TODO: create logging function in index.js
             // TODO: use logger from index.js
-            my_log.info(util.format('%d: processed %d rows of %s (%d done)...', count, cursorSize, name, cursorSize * count));
+            my_log.debug(util.format('%d: processed %d rows of %s (%d done)...', count, cursorSize, name, cursorSize * count));
+            if(err){
+              my_log.error("Error at the end of row processing: " + err);
+            }
             callback(err);
           });
         }
@@ -108,6 +124,9 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
   },
 
   function(err) {
+    if(err){
+      my_log.error("Error waiting for finished: " + err);
+    }
     callback(err);
   });
 }
@@ -123,11 +142,15 @@ exports.convert = function(config, callback) {
 
   pool.connect(function(err, client, done) {
     if (err) {
+      my_log.error("Error connecting to database: " + err);
       callback(err);
     } else {
       runAllQueries(client, function(err) {
         done();
         client.end();
+        if (err) {
+          my_log.error("Error running queries: " + err);
+        }
         callback(err);
       });
     }
