@@ -1,14 +1,19 @@
-var fs = require('fs');
-var util = require('util');
-var pg = require('pg');
-var path = require('path');
-var Cursor = require('pg-cursor');
-var async = require('async');
-var queries = require('./queries');
+const fs = require('fs');
+const util = require('util');
+const pg = require('pg');
+const path = require('path');
+const Cursor = require('pg-cursor');
+const async = require('async');
+const queries = require('./queries');
 
-var pitsAndRelations;
+const log = require('histograph-logging');
 
-var woonplaats = null;
+const my_log = new log("data");
+
+
+const pitsAndRelations;
+
+const woonplaats = null;
 
 // Set woonplaats to a specific BAG woonplaats (name + code)
 // to only process one single woonplaats
@@ -94,7 +99,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
             // TODO: create logging function in index.js
             // TODO: use logger from index.js
-            console.log(util.format('%d: processed %d rows of %s (%d done)...', count, cursorSize, name, cursorSize * count));
+            my_log.info(util.format('%d: processed %d rows of %s (%d done)...', count, cursorSize, name, cursorSize * count));
             callback(err);
           });
         }
@@ -113,8 +118,10 @@ exports.convert = function(config, callback) {
     dataset: 'bag',
     truncate: true
   });
+  
+  const pool = new pg.Pool(config.db);
 
-  pg.connect(config.db, function(err, client, done) {
+  pool.connect(function(err, client, done) {
     if (err) {
       callback(err);
     } else {
@@ -125,4 +132,7 @@ exports.convert = function(config, callback) {
       });
     }
   });
+  
+  pool.end(function (){});
+  
 };

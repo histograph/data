@@ -2,6 +2,10 @@ const path = require('path');
 const async = require('async');
 const config = require('histograph-config');
 const parseArgs = require('minimist');
+const log = require('histograph-logging');
+
+const my_log = new log("data");
+
 require('colors');
 
 const steps = [
@@ -21,17 +25,17 @@ if (argv._.length > 0) {
 async.eachSeries(datasets, function(dataset, outerCallback) {
   var importer = require('./' + path.join(dataset, dataset));
 
-  console.log('Processing dataset ' + dataset.inverse + ':');
+  my_log.info('Processing dataset ' + dataset.inverse + ':');
   async.eachSeries(steps, function(step, innerCallback) {
     if (!argv.steps || (argv.steps && argv.steps.split(',').indexOf(step) > -1) || step === 'done') {
       if (importer[step]) {
-        console.log('  Executing step ' + step.underline + '...');
+        my_log.info('  Executing step ' + step.underline + '...');
 
         importer[step](config.data[dataset], function(err) {
           if (err) {
-            console.log('    Error: '.red + JSON.stringify(err));
+            my_log.error('    Error: '.red + JSON.stringify(err));
           } else {
-            console.log('    Done!'.green);
+            my_log.info('    Done!'.green);
           }
 
           innerCallback(err);
@@ -41,7 +45,7 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
       }
     } else {
       if (importer[step]) {
-        console.log(('  Skipping step ' + step.underline + '...').gray);
+        my_log.info(('  Skipping step ' + step.underline + '...').gray);
       }
 
       innerCallback();
@@ -50,7 +54,7 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
 
   function(err) {
     if (err) {
-      console.log('Error: '.red + err);
+      my_info.error('Error: '.red + err);
     }
 
     outerCallback();
@@ -58,5 +62,5 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
 },
 
 function() {
-  console.log('\nAll datasets done!'.green.underline);
+  my_log.info('\nAll datasets done!'.green.underline);
 });
