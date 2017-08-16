@@ -54,7 +54,7 @@ async.eachSeries(datasets, function(dataset, outerCallback) {
 
   function(err) {
     if (err) {
-      my_log.error('Error: '.red + err);
+      my_log.error('Error: '.red + JSON.stringify(err));
     }
 
     outerCallback();

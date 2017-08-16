@@ -38,6 +38,8 @@ const woonplaats = null;
 function runAllQueries(client, callback) {
   async.eachSeries(queries, function(query, callback) {
     var filename = query.name;
+    my_log.info("Processing query: " + query.name);
+    
     if (woonplaats) {
       filename += '.woonplaats';
     }
@@ -51,7 +53,7 @@ function runAllQueries(client, callback) {
 
     runQuery(client, sql, query.name, query.rowToPitsAndRelations, function(err) {
       if(err){
-        my_log.error("Error from run query: " + err);
+        my_log.error("Error from run query: " + JSON.stringify(err));
       }
       callback(err);
     });
@@ -59,7 +61,7 @@ function runAllQueries(client, callback) {
 
   function(err) {
     if(err){
-      my_log.error("Error processing queries: " + err);
+      my_log.error("Error processing queries: " + JSON.stringify(err));
     }
     callback(err);
   });
@@ -79,7 +81,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
     cursor.read(cursorSize, function(err, rows) {
       if (err) {
-        my_log.error("Error in reading cursor: " + err);
+        my_log.error("Error in reading cursor: " + JSON.stringify(err));
         callback(err);
       } else {
         if (!rows.length) {
@@ -93,7 +95,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
             async.eachSeries(emit, function(item, callback) {
               pitsAndRelations.emit(item.type, item.obj, function(err) {
                 if(err){
-                  my_log.error("pitsAndRelations.emit error: " + err);
+                  my_log.error("pitsAndRelations.emit error: " + JSON.stringify(err));
                 }
                 callback(err);
               });
@@ -101,7 +103,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
             function(err) {
               if(err){
-                my_log.error("Error processing rows: " + err);
+                my_log.error("Error processing rows: " + JSON.stringify(err));
               }
               callback(err);
             });
@@ -114,7 +116,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
             // TODO: use logger from index.js
             my_log.debug(util.format('%d: processed %d rows of %s (%d done)...', count, cursorSize, name, cursorSize * count));
             if(err){
-              my_log.error("Error at the end of row processing: " + err);
+              my_log.error("Error at the end of row processing: " + JSON.stringify(err));
             }
             callback(err);
           });
@@ -125,7 +127,7 @@ function runQuery(client, sql, name, rowToPitsAndRelations, callback) {
 
   function(err) {
     if(err){
-      my_log.error("Error waiting for finished: " + err);
+      my_log.error("Error waiting for finished: " + JSON.stringify(err));
     }
     callback(err);
   });
@@ -142,14 +144,14 @@ exports.convert = function(config, callback) {
 
   pool.connect(function(err, client, done) {
     if (err) {
-      my_log.error("Error connecting to database: " + err);
+      my_log.error("Error connecting to database: " + JSON.stringify(err));
       callback(err);
     } else {
       runAllQueries(client, function(err) {
         done();
         client.end();
         if (err) {
-          my_log.error("Error running queries: " + err);
+          my_log.error("Error running queries: " + JSON.stringify(err));
         }
         callback(err);
       });
