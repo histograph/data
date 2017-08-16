@@ -14,7 +14,7 @@ SELECT
   huisnummertoevoeging,
   postcode,
   opr.identificatie AS openbareruimte,
-  ST_AsGeoJSON(ST_Transform(ST_Force2D(geopunt), 4326)) AS geometry
+  ST_AsGeoJSON(ST_Transform(ST_MakeValid(ST_Force2D(geopunt)), 4326)) AS geometry
 FROM
   bagactueel.nummeraanduiding na
 JOIN

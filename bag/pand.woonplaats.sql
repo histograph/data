@@ -2,7 +2,7 @@ SELECT * FROM (
   SELECT
     p.identificatie AS id,
     bouwjaar,
-    ST_AsGeoJSON(ST_Transform(ST_Force2D(p.geovlak), 4326)) AS geometry,
+    ST_AsGeoJSON(ST_Transform(ST_MakeValid(ST_Force2D(p.geovlak)), 4326)) AS geometry,
     array_to_string(ARRAY(
       SELECT DISTINCT opr.identificatie::bigint FROM
         bagactueel.verblijfsobjectpand vbop
