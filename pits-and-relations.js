@@ -1,8 +1,11 @@
-var fs = require('fs');
-var path = require('path');
-var schemas = require('histograph-schemas');
-var geojsonhint = require('@mapbox/geojsonhint');
-var validator = require('is-my-json-valid');
+const fs = require('fs');
+const path = require('path');
+const schemas = require('histograph-schemas');
+const geojsonhint = require('@mapbox/geojsonhint');
+const validator = require('is-my-json-valid');
+const log = require('histograph-logging');
+
+const my_log = new log("data");
 
 var validators = {
   pits: validator(schemas.pits),
@@ -30,11 +33,13 @@ module.exports = function(config) {
 
     if (!jsonValid) {
       errors = validators[type].errors;
+      my_log.error("Error validating type: " + type + ", object: " + JSON.stringify(obj) + ", error: " + JSON.stringify(errors));
       valid = false;
     } else if (type === 'pits' && obj.geometry) {
       var geojsonErrors = geojsonhint.hint(obj.geometry);
       if (geojsonErrors.length > 0) {
         errors = geojsonErrors;
+        my_log.error("Error validating pit geometry: " + JSON.stringify(obj.geometry) + ", error: " + JSON.stringify(errors));
         valid = false;
       }
     }
