@@ -16,7 +16,7 @@ const steps = [
 
 var argv = parseArgs(process.argv.slice(2));
 
-// By default, import all datasets with have data config in configuration file
+// By default, import all datasets which have data config in configuration file
 var datasets = Object.keys(config.data);
 if (argv._.length > 0) {
   datasets = argv._;
