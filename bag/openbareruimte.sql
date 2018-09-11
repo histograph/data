@@ -1,7 +1,7 @@
 SELECT
   opr.identificatie AS id,
   openbareruimtenaam AS name,
-  gerelateerdewoonplaats::int AS woonplaatscode,
+  gerelateerdewoonplaats AS woonplaatscode,
   wp.woonplaatsnaam::text
 FROM
   bagactueel.openbareruimte opr
