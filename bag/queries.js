@@ -7,30 +7,43 @@ var urlify = require('urlify').create({
   trim: true
 });
 
+const commonPrefixLOD = 'https://bag.basisregistraties.overheid.nl/bag/id/';
+
+const prefixesLOD = {
+    openbareruimte: commonPrefixLOD + 'openbare-ruimte/',
+    woonplaats: commonPrefixLOD + 'woonplaats/',
+    pand: commonPrefixLOD + 'pand/',
+    nummeraanduiding: commonPrefixLOD + 'nummeraanduiding/'
+};
+
+function padID(id){
+  return String(id).padStart(16,'0');
+}
+
 module.exports = [
   {
     name: 'openbareruimte',
     rowToPitsAndRelations: function(row) {
       var pit = {
-        id: parseInt(row.id),
+        uri: prefixesLOD.openbareruimte + padID(row.id),
         name: row.name,
         type: 'hg:Street',
         data: {
-          woonplaatscode: parseInt(row.woonplaatscode),
+          woonplaatscode: prefixesLOD.woonplaats + row.woonplaatscode,
           woonplaatsnaam: row.woonplaatsnaam
         }
       };
 
       var woonplaatsRelation = {
-        from: parseInt(row.id),
-        to: parseInt(row.woonplaatscode),
+        from: pit.uri,
+        to: prefixesLOD.woonplaats + row.woonplaatscode,
         type: 'hg:liesIn'
       };
 
       var nwbId = 'nwb/' + urlify(row.woonplaatsnaam + '-' + row.name);
 
       var nwbRelation = {
-        from: parseInt(row.id),
+        from: pit.uri,
         to: nwbId,
         type: 'hg:sameHgConcept'
       };
@@ -56,7 +69,7 @@ module.exports = [
     name: 'woonplaats',
     rowToPitsAndRelations: function(row) {
       var pit = {
-        id: parseInt(row.id),
+        uri: prefixesLOD.woonplaats + row.id, // note no padding here
         name: row.name,
         type: 'hg:Place',
         geometry: JSON.parse(row.geometry),
@@ -78,7 +91,7 @@ module.exports = [
     name: 'pand',
     rowToPitsAndRelations: function(row) {
       var pit = {
-        id: parseInt(row.id),
+        uri: prefixesLOD.pand + padID(row.id),
         type: 'hg:Building',
         validSince: row.bouwjaar,
         geometry: JSON.parse(row.geometry)
@@ -96,20 +109,15 @@ module.exports = [
           result.push({
             type: 'relations',
             obj: {
-              from: parseInt(row.id),
-              to: parseInt(openbareruimte),
+              from: pit.uri,
+              to: prefixesLOD.openbareruimte + padID(openbareruimte),
               type: 'hg:liesIn'
             }
           });
         });
       }
 
-      return [
-        {
-          type: 'pits',
-          obj: pit
-        }
-      ];
+      return result;
     }
   },
 
@@ -117,21 +125,21 @@ module.exports = [
     name: 'nummeraanduiding',
     rowToPitsAndRelations: function(row) {
       var pit = {
-        id: parseInt(row.id),
+        uri: prefixesLOD.nummeraanduiding + padID(row.id),
         name: [row.openbareruimtenaam, row.huisnummer, row.huisletter, row.huisnummertoevoeging].filter(function(p) {
             return p;
           }).join(' '),
         type: 'hg:Address',
         geometry: JSON.parse(row.geometry),
         data: {
-          openbareruimte: parseInt(row.openbareruimte),
+          openbareruimte: prefixesLOD.openbareruimte + padID(row.openbareruimte),
           postcode: row.postcode
         }
       };
 
       var relation = {
-        from: parseInt(row.id),
-        to: parseInt(row.openbareruimte),
+        from: pit.uri,
+        to: prefixesLOD.openbareruimte + padID(row.openbareruimte),
         type: 'hg:liesIn'
       };
 
@@ -151,8 +159,8 @@ module.exports = [
           result.push({
             type: 'relations',
             obj: {
-              from: parseInt(row.id),
-              to: parseInt(pandId),
+              from: pit.uri,
+              to: prefixesLOD.pand + padID(pandId),
               type: 'hg:liesIn'
             }
           });
