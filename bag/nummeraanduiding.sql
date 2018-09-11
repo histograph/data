@@ -1,8 +1,8 @@
 SELECT
-  na.identificatie::bigint AS id,
+  na.identificatie AS id,
   (
     SELECT
-    array_to_string(array_agg(p.identificatie::bigint), ',') AS pand_ids
+    array_to_string(array_agg(p.identificatie), ',') AS pand_ids
     FROM bagactueel.pand p
     JOIN bagactueel.verblijfsobjectpand vbop
     ON p.identificatie = vbop.gerelateerdpand
@@ -25,3 +25,11 @@ JOIN
   bagactueel.openbareruimte opr
 ON
   na.gerelateerdeopenbareruimte = opr.identificatie
+
+WHERE na.aanduidingrecordinactief = FALSE AND 
+      vbo.aanduidingrecordinactief = FALSE AND 
+      opr.aanduidingrecordinactief = FALSE AND 
+      na.einddatumtijdvakgeldigheid IS NULL AND 
+      vbo.einddatumtijdvakgeldigheid IS NULL AND 
+      opr.einddatumtijdvakgeldigheid IS NULL
+

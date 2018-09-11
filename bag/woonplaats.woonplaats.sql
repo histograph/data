@@ -1,7 +1,7 @@
 SELECT
-  identificatie::int AS id,
-  woonplaatsnaam::text AS name,
-  gemeentecode::int,
+  identificatie AS id,
+  woonplaatsnaam AS name,
+  gemeentecode,
   ST_AsGeoJSON(ST_Transform(ST_MakeValid(ST_Force2D(geovlak)), 4326)) AS geometry
 FROM
   bagactueel.woonplaats wp
@@ -11,3 +11,7 @@ ON
   wp.identificatie = gwp.woonplaatscode
 WHERE
   identificatie = {woonplaatscode}
+AND
+		wp.aanduidingrecordinactief = FALSE AND 
+		wp.einddatumtijdvakgeldigheid IS NULL AND 
+    gwp.einddatumtijdvakgeldigheid IS NULL

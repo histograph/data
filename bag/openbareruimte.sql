@@ -9,3 +9,7 @@ JOIN
   bagactueel.woonplaats wp ON opr.gerelateerdewoonplaats = wp.identificatie
 WHERE
   opr.openbareruimtetype = 'Weg'
+  AND wp.aanduidingrecordinactief = FALSE AND 
+      opr.aanduidingrecordinactief = FALSE AND 
+      wp.einddatumtijdvakgeldigheid IS NULL AND 
+      opr.einddatumtijdvakgeldigheid IS NULL

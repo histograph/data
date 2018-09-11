@@ -1,8 +1,9 @@
-SELECT DISTINCT ON (na.identificatie)
-  na.identificatie::bigint AS id,
+SELECT DISTINCT ON (na.identificatie) /* this is needed since verblijfsobjectgebruiksdoel 
+                                      has more records with different verblijfsobjectstatus */
+  na.identificatie AS id,
   (
   	SELECT
-  	array_to_string(array_agg(p.identificatie::bigint), ',') AS pand_ids
+  	array_to_string(array_agg(p.identificatie), ',') AS pand_ids
   	FROM bagactueel.pand p
   	JOIN bagactueel.verblijfsobjectpand vbop
   	ON p.identificatie = vbop.gerelateerdpand
@@ -31,3 +32,13 @@ ON
   na.gerelateerdeopenbareruimte = opr.identificatie
 WHERE
   opr.gerelateerdewoonplaats = {woonplaatscode}
+AND
+  na.aanduidingrecordinactief = FALSE AND 
+  vbo.aanduidingrecordinactief = FALSE AND 
+  opr.aanduidingrecordinactief = FALSE AND 
+  gd.aanduidingrecordinactief = FALSE AND 
+  na.einddatumtijdvakgeldigheid IS NULL AND 
+  vbo.einddatumtijdvakgeldigheid IS NULL AND 
+  opr.einddatumtijdvakgeldigheid IS NULL AND
+  gd.einddatumtijdvakgeldigheid IS NULL
+
