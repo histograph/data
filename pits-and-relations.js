@@ -47,8 +47,8 @@ module.exports = function(config) {
     if (!valid) {
       setImmediate(callback, errors);
     } else {
-      streams[type].write(JSON.stringify(obj) + '\n', function() {
-        callback();
+      streams[type].write(JSON.stringify(obj) + '\n', function(err) {
+        callback(err);
       });
     }
   };

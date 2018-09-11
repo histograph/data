@@ -53,7 +53,7 @@ function runAllQueries(client, callback) {
 
     runQuery(client, sql, query.name, query.rowToPitsAndRelations, function(err) {
       if(err){
-        my_log.error("Error from run query: " + JSON.stringify(err));
+        my_log.error("Error from run query " + query.name + ", error: " + JSON.stringify(err));
       }
       callback(err);
     });
