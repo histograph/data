@@ -18,7 +18,7 @@
     "async": "^2.1.4",
     "colors": "^1.1.2",
     "csv": "^1.1.0",
-    "event-stream": "^3.3.4",
+    "event-stream": "3.3.4",
     "@mapbox/geojsonhint": "^1.2.1",
     "highland": "^2.10.1",
     "is-my-json-valid": "^2.15.0",
